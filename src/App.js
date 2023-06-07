@@ -64,10 +64,13 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
-
-      {!user && loginForm()}
+      {  !user && <div>
+          <h1>log in to application</h1>
+          {loginForm()}
+         </div>
+      }
       {  user && <div>
+          <h1>blogs</h1>
           <p>{user.name} logged in</p>
           {blogList()}
         </div>
