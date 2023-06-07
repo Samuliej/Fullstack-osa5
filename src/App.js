@@ -8,6 +8,9 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [newBlogTitle, setNewBlogTitle] = useState('')
+  const [newBlogAuthor, setNewBlogAuthor] = useState('')
+  const [newBlogUrl, setNewBlogUrl] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -82,11 +85,52 @@ const App = () => {
   )
 
   const blogList = () => (
-    blogs.map(blog => blog.author === user.name
-      ? <Blog key={blog.id} blog={blog} />
-      : null
-    )
+    blogs.map(blog => {
+      const blogUser = blog.user
+      console.log('blogList:         ')
+      console.log(blogUser)
+      if (blogUser)
+        if (user.name === blogUser.name)
+          return (<Blog key={blog.id} blog={blog} />)
+    })
   )
+
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      title:<input 
+        value={newBlogTitle}
+        onChange={({ target }) => setNewBlogTitle(target.value)}
+      /> <br></br>
+      author:<input 
+        value={newBlogAuthor}
+        onChange={({ target }) => setNewBlogAuthor(target.value)}
+      /> <br></br>
+      url:<input 
+        value={newBlogUrl}
+        onChange={({ target }) => setNewBlogUrl(target.value)}
+      /> <br></br>
+      <button type='submit'>create</button>
+    </form>
+  )
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newBlogTitle,
+      author: newBlogAuthor,
+      url: newBlogUrl,
+      user: user
+    }
+
+    blogService
+      .create(blogObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setNewBlogTitle('')
+          setNewBlogAuthor('')
+          setNewBlogUrl('')
+        })
+  }
 
   return (
     <div>
@@ -101,6 +145,8 @@ const App = () => {
             {user.name} logged in
             <button onClick={handleLogout}>logout</button> 
           </p>
+          <h2>create new</h2>
+          {blogForm()}
           {blogList()}
         </div>
       }
