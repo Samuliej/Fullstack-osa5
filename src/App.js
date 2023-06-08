@@ -106,7 +106,8 @@ const App = () => {
           return (<Blog key={blog.id} blog={blog} />)
     })
   )
-
+  
+  // Hoidettiin 5.5 yhteydessä
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
