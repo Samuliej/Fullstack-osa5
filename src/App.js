@@ -11,9 +11,6 @@ import BlogForm from './components/BlogForm'
 const App = () => {
   const blogFormRef = useRef()
   const [blogs, setBlogs] = useState([])
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -103,9 +100,22 @@ const App = () => {
      // console.log(blogUser)
       if (blogUser)
         if (user.name === blogUser.name)
-          return (<Blog key={blog.id} blog={blog} />)
+          return (<Blog key={blog.id} blog={blog} handleLike={handleLike} />)
     })
   )
+
+  const handleLike = async (blog) => {
+    console.log('handleLikessa App.js')
+    console.log(blog)
+    try {
+      // Päivitetään lokaalisti, koska tykkäys tuli turhan hitaasti
+      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
+      setBlogs(updatedBlogs)
+      await blogService.like(blog)
+    } catch (exception) {
+      console.log(exception.message)
+    }
+  }
   
   // Hoidettiin 5.5 yhteydessä
   const blogForm = () => (
