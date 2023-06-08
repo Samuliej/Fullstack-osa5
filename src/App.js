@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Error from './components/Error'
 import './index.css'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
+  const blogFormRef = useRef()
   const [blogs, setBlogs] = useState([])
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
@@ -96,8 +99,8 @@ const App = () => {
   const blogList = () => (
     blogs.map(blog => {
       const blogUser = blog.user
-      console.log('blogList:         ')
-      console.log(blogUser)
+     // console.log('blogList:         ')
+     // console.log(blogUser)
       if (blogUser)
         if (user.name === blogUser.name)
           return (<Blog key={blog.id} blog={blog} />)
@@ -105,43 +108,22 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <form onSubmit={addBlog}>
-      title:<input 
-        value={newBlogTitle}
-        onChange={({ target }) => setNewBlogTitle(target.value)}
-      /> <br></br>
-      author:<input 
-        value={newBlogAuthor}
-        onChange={({ target }) => setNewBlogAuthor(target.value)}
-      /> <br></br>
-      url:<input 
-        value={newBlogUrl}
-        onChange={({ target }) => setNewBlogUrl(target.value)}
-      /> <br></br>
-      <button type='submit'>create</button>
-    </form>
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
   )
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newBlogTitle,
-      author: newBlogAuthor,
-      url: newBlogUrl,
-      user: user
-    }
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
 
     blogService
       .create(blogObject)
         .then(returnedBlog => {
           setBlogs(blogs.concat(returnedBlog))
-          setNotificationMessage(`a new blog ${newBlogTitle} by ${newBlogAuthor} added`)
+          setNotificationMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
           setTimeout(() => {
             setNotificationMessage(null)
           }, 5000)
-          setNewBlogTitle('')
-          setNewBlogAuthor('')
-          setNewBlogUrl('')
         })
   }
 
@@ -162,7 +144,7 @@ const App = () => {
             {user.name} logged in
             <button onClick={handleLogout}>logout</button> 
           </p>
-          <h2>create new</h2>
+      
           {blogForm()}
           {blogList()}
         </div>
