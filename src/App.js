@@ -98,7 +98,7 @@ const App = () => {
     return sortedBlogs.map((blog) => {
       const blogUser = blog.user
       if (blogUser && user.name === blogUser.name) {
-        return <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+        return <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} />
       }
     })
   }
@@ -111,6 +111,20 @@ const App = () => {
       const updatedBlogs = blogs.map((b) => (b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
       setBlogs(updatedBlogs)
       await blogService.like(blog)
+    } catch (exception) {
+      console.log(exception.message)
+    }
+  }
+
+  const handleRemove = async (blog) => {
+    try {
+      console.log('App.js remove funktiossa')
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter((b) => b.id !== blog.id))
+      setNotificationMessage(`Blog ${blog.title} by ${blog.author} removed successfully.`)
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000)
     } catch (exception) {
       console.log(exception.message)
     }

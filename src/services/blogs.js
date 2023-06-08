@@ -29,6 +29,21 @@ const like = async (blog) => {
   }
 }
 
+const remove = async (blogId) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const deletePath = `${baseUrl}/${blogId}`
+  try {
+    console.log('blogs.js remove funktiossa')
+    const response = await axios.delete(deletePath, config)
+    return response.data
+  } catch (exception) {
+    console.log(exception.message)
+  }
+}
+
 const create = async newObject => {
   const config = {
     headers: { Authorization: token }
@@ -42,4 +57,4 @@ const create = async newObject => {
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, setToken, create, like }
+export default { getAll, setToken, create, like, remove }
