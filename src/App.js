@@ -93,16 +93,15 @@ const App = () => {
     </form>
   )
 
-  const blogList = () => (
-    blogs.map(blog => {
+  const blogList = () => {
+    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+    return sortedBlogs.map((blog) => {
       const blogUser = blog.user
-     // console.log('blogList:         ')
-     // console.log(blogUser)
-      if (blogUser)
-        if (user.name === blogUser.name)
-          return (<Blog key={blog.id} blog={blog} handleLike={handleLike} />)
+      if (blogUser && user.name === blogUser.name) {
+        return <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+      }
     })
-  )
+  }
 
   const handleLike = async (blog) => {
     console.log('handleLikessa App.js')
