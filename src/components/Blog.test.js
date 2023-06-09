@@ -93,4 +93,16 @@ describe('<Blog />', () => {
     expect(userElement).toBeDefined()
   })
 
+
+  test('if like button is called twice, the corresponding event handler is called twice', async () => {
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+  
+    expect(handleLike).toHaveBeenCalledTimes(2)
+  })
+
 })
