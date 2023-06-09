@@ -21,12 +21,12 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-	  if (loggedUserJSON) {
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -73,21 +73,21 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input 
+        <input
           type='text'
           value={username}
           name='Username'
           onChange={({ target }) => setUsername(target.value)}
-          />
+        />
       </div>
       <div>
         password
-          <input 
+        <input
           type='password'
           value={password}
           name='Password'
           onChange={({ target }) => setPassword(target.value)}
-          />
+        />
       </div>
       <button type='submit'>login</button>
     </form>
@@ -123,13 +123,13 @@ const App = () => {
       setBlogs(blogs.filter((b) => b.id !== blog.id))
       setNotificationMessage(`Blog ${blog.title} by ${blog.author} removed successfully.`)
       setTimeout(() => {
-        setNotificationMessage(null);
+        setNotificationMessage(null)
       }, 5000)
     } catch (exception) {
       console.log(exception.message)
     }
   }
-  
+
   // Hoidettiin 5.5 yhteydessä
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
@@ -142,36 +142,36 @@ const App = () => {
 
     blogService
       .create(blogObject)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          setNotificationMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
-          setTimeout(() => {
-            setNotificationMessage(null)
-          }, 5000)
-        })
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNotificationMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      })
   }
 
   return (
     <div>
       {  !user && <div>
-          <h1>log in to application</h1>
-          <Notification message={notificationMessage} />
-          <Error message={errorMessage} />
-          {loginForm()}
-         </div>
+        <h1>log in to application</h1>
+        <Notification message={notificationMessage} />
+        <Error message={errorMessage} />
+        {loginForm()}
+      </div>
       }
       {  user && <div>
-          <h1>blogs</h1>
-          <Notification message={notificationMessage} />
-          <Error message={errorMessage} />
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout}>logout</button> 
-          </p>
-      
-          {blogForm()}
-          {blogList()}
-        </div>
+        <h1>blogs</h1>
+        <Notification message={notificationMessage} />
+        <Error message={errorMessage} />
+        <p>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+
+        {blogForm()}
+        {blogList()}
+      </div>
       }
     </div>
   )

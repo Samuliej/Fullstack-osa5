@@ -1,7 +1,14 @@
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 
 const Blog = ({ blog, handleLike, handleRemove }) => {
   const [visible, setVisible] = useState(false)
+
+  Blog.propTypes = {
+    handleLike: PropTypes.func.isRequired,
+    handleRemove: PropTypes.func.isRequired,
+    blog: PropTypes.object.isRequired
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -24,7 +31,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
       handleRemove(blog)
   }
 
- return (
+  return (
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}  <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
@@ -38,7 +45,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
         </div>
       )}
     </div>
- )
+  )
 }
 
 export default Blog
