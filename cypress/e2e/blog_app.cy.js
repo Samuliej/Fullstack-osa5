@@ -66,6 +66,14 @@ describe('Blog app', function() {
         cy.contains('second blog')
         cy.contains('cypress2')
       })
+
+      it('a blog can be liked', function() {
+        cy.contains('first blog').parent().find('button').click()
+        cy.contains('www.cyptest.com')
+        cy.contains('0')
+        cy.contains('like').click()
+        cy.contains('1')
+      })
     })
   })
 })

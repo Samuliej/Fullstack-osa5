@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 
-const Blog = ({ blog, handleLike, handleRemove }) => {
+const Blog = ({ blog, handleLike, handleRemove, user }) => {
   const [visible, setVisible] = useState(false)
+  const { user: blogUser } = blog
 
   Blog.propTypes = {
     handleLike: PropTypes.func.isRequired,
@@ -41,7 +42,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
           {blog.url} <br/>
           {blog.likes} <button onClick={onLikeClick}>like</button> <br/>
           {blog.user.name} <br/>
-          <button onClick={onClickRemove}>remove</button>
+          {user && blogUser && user.name === blogUser.name && (<button onClick={onClickRemove}>remove</button>)}
         </div>
       )}
     </div>
