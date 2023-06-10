@@ -40,7 +40,7 @@ const Blog = ({ blog, handleLike, handleRemove, user }) => {
       {visible && (
         <div className='toggledContent'>
           {blog.url} <br/>
-          {blog.likes} <button onClick={onLikeClick}>like</button> <br/>
+          {blog.likes} <button id='like-button' onClick={onLikeClick}>like</button> <br/>
           {blog.user.name} <br/>
           {user && blogUser && user.name === blogUser.name && (<button onClick={onClickRemove}>remove</button>)}
         </div>

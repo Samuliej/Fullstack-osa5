@@ -113,5 +113,39 @@ describe('Blog app', function() {
     })
   })
 
+  describe('blogs are ordered according to how many likes they have', function() {
+    beforeEach(function() {
+      cy.login({ username: 'testuser', password: 'password' })
+      cy.createBlog({ title: 'the most liked blog', author: 'cypress1', url: 'www.cyptest.com', likes: 100, user: user })
+      cy.createBlog({ title: 'third most liked blog', author: 'cypress2', url: 'www.cyptest2.com', likes: 80, user: user })
+      cy.contains('logout').click()
+
+      cy.login({ username: 'testman', password: 'secret' })
+      cy.createBlog({ title: 'second most liked blog', author: 'cypress2', url: 'www.cyptest2.com', likes: 99, user: user })
+    })
+
+    it('blogs are ordered with the most liked blog first', function() {
+      cy.get('.blogDiv').eq(0).should('contain', 'the most liked blog')
+      cy.get('.blogDiv').eq(1).should('contain', 'second most liked blog')
+      cy.get('.blogDiv').eq(2).should('contain', 'third most liked blog')
+    })
+
+    it('by liking the blogs, they will switch order if another blog gets more likes', function() {
+      cy.get('.blogDiv').eq(1).find('button').click()
+      cy.get('.blogDiv').eq(1).get('#like-button').click()
+      cy.contains('100')
+
+      cy.get('.blogDiv').eq(1).get('#like-button').click()
+      cy.contains('101')
+
+      // blog has switched place
+      cy.get('.blogDiv').eq(1).should('not.contain', 'second most liked blog')
+      cy.get('.blogDiv').eq(1).should('contain', 'the most liked blog')
+
+      cy.get('.blogDiv').eq(0).should('not.contain', 'the most liked blog')
+      cy.get('.blogDiv').eq(0).should('contain', 'second most liked blog')
+    })
+  })
+
 
 })
