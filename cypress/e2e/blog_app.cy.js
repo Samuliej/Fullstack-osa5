@@ -1,11 +1,13 @@
 describe('Blog app', function() {
+  const user = {
+    name: 'test user',
+    username: 'testuser',
+    password: 'password'
+  }
+
+
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-    const user = {
-      name: 'test user',
-      username: 'testuser',
-      password: 'password'
-    }
     cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)
     cy.visit('')
   })
@@ -35,6 +37,35 @@ describe('Blog app', function() {
       cy.get('.error').should('contain', 'wrong username or password')
       cy.get('.error').should('have.css', 'background-color', 'rgb(255, 0, 0)')
       cy.get('.error').should('have.css', 'border-style', 'solid')
+    })
+  })
+
+  describe('when logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'testuser', password: 'password' })
+    })
+
+    it('a blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('a blog created by cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('www.thisisadrill.com')
+      cy.get('#create-button').click()
+
+      cy.contains('a blog created by cypress')
+    })
+
+    describe('and several blogs exist', function() {
+      this.beforeEach(function() {
+        cy.createBlog({ title: 'first blog', author: 'cypress1', url: 'www.cyptest.com', user: user })
+        cy.createBlog({ title: 'second blog', author: 'cypress2', url: 'www.cyptest2.com', user: user })
+        cy.createBlog({ title: 'third blog', author: 'cypress3', url: 'www.cyptest3.com', user: user })
+      })
+
+      it('one of the blogs exist', function() {
+        cy.contains('second blog')
+        cy.contains('cypress2')
+      })
     })
   })
 })
