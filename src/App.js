@@ -97,23 +97,14 @@ const App = () => {
 
   const blogList = () => {
     const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
-    return sortedBlogs.map((blog) => {
-      const blogUser = blog.user
-      if (blogUser && user.name === blogUser.name) {
-        return (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleLike={handleLike}
-            handleRemove={handleRemove}
-            user={user} />)
-      }
-    })
-  }
-
-  const allBlogs = () => {
-    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
-    return sortedBlogs.map(blog => ( <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} /> ))
+    return sortedBlogs.map((blog) => (
+      <Blog
+        key={blog.id}
+        blog={blog}
+        handleLike={handleLike}
+        handleRemove={handleRemove}
+        user={user} />
+    ))
   }
 
   const handleLike = async (blog) => {
@@ -171,7 +162,6 @@ const App = () => {
         <Notification message={notificationMessage} />
         <Error message={errorMessage} />
         {loginForm()}
-        {allBlogs()}
       </div>
       }
       {  user && <div>

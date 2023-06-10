@@ -19,6 +19,7 @@ describe('Blog app', function() {
     cy.contains('login')
   })
 
+
   describe('Login', function() {
     it('succeeds with correct credentials', function() {
       cy.get('#username').type('testuser')
@@ -56,7 +57,7 @@ describe('Blog app', function() {
     })
 
     describe('and several blogs exist', function() {
-      this.beforeEach(function() {
+      beforeEach(function() {
         cy.createBlog({ title: 'first blog', author: 'cypress1', url: 'www.cyptest.com', user: user })
         cy.createBlog({ title: 'second blog', author: 'cypress2', url: 'www.cyptest2.com', user: user })
         cy.createBlog({ title: 'third blog', author: 'cypress3', url: 'www.cyptest3.com', user: user })
@@ -88,4 +89,5 @@ describe('Blog app', function() {
       })
     })
   })
+
 })
