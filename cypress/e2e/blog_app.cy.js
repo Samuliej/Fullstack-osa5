@@ -67,12 +67,24 @@ describe('Blog app', function() {
         cy.contains('cypress2')
       })
 
+
+      // The implementation for these two tests are done acknowledging, that if
+      // there would be multiple blogs with all their information out,
+      // the buttons would not likely be the correct ones
       it('a blog can be liked', function() {
         cy.contains('first blog').parent().find('button').click()
         cy.contains('www.cyptest.com')
         cy.contains('0')
         cy.contains('like').click()
         cy.contains('1')
+      })
+
+      it('a blog can be removed by the signed in user', function() {
+        cy.contains('second blog').parent().find('button').click()
+        cy.contains('remove').click()
+        cy.contains('Blog second blog by cypress2 removed successfully.')
+        cy.visit('')
+        cy.get('html').should('not.contain', 'second blog')
       })
     })
   })
