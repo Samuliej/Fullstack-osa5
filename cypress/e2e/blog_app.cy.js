@@ -5,10 +5,17 @@ describe('Blog app', function() {
     password: 'password'
   }
 
+  const secondUser = {
+    name: 'testing man',
+    username: 'testman',
+    password: 'secret'
+  }
+
 
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, secondUser)
     cy.visit('')
   })
 
@@ -18,7 +25,6 @@ describe('Blog app', function() {
     cy.contains('password')
     cy.contains('login')
   })
-
 
   describe('Login', function() {
     it('succeeds with correct credentials', function() {
@@ -88,6 +94,24 @@ describe('Blog app', function() {
         cy.get('html').should('not.contain', 'second blog')
       })
     })
+
+    describe('a different user logged in', function() {
+      beforeEach(function() {
+        cy.createBlog({ title: 'first blog', author: 'cypress1', url: 'www.cyptest.com', user: user })
+        cy.contains('logout').click()
+        cy.login({ username: 'testman', password: 'secret' })
+        cy.createBlog({ title: 'testmans blog', author: 'testman', url: 'www.test.com', user: secondUser })
+      })
+
+      it('only an user who has added an blog can see the remove button', function() {
+        cy.contains('first blog').parent().find('button').click()
+        cy.contains('remove').should('not.exist')
+
+        cy.contains('testmans blog').parent().find('button').click()
+        cy.contains('remove')
+      })
+    })
   })
+
 
 })
